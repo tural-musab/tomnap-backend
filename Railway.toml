@@ -8,7 +8,7 @@ nixPkgs = ["nodejs", "yarn"]
 cmds = ["yarn install"]
 
 [build.nixpacksPlan.phases.build]
-cmds = ["yarn build"]
+cmds = ["yarn build", "npx medusa db:migrate", "npx medusa links sync"]
 
 [deploy]
-startCommand = "npx medusa db:migrate && npx medusa links sync && yarn start"
+startCommand = "yarn start"
