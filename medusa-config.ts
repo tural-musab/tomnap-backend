@@ -12,12 +12,13 @@ export default defineConfig({
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     },
+    // ❌ workerMode'u kaldırıyoruz - TypeScript hatası veriyor
     redisUrl: process.env.REDIS_URL,
-    workerMode: process.env.MEDUSA_WORKER_MODE || "shared"
   },
   admin: {
     disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
   },
+  // Redis modülleri conditional olarak
   modules: process.env.REDIS_URL ? [
     {
       resolve: "@medusajs/medusa/cache-redis",
