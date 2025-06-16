@@ -1,0 +1,14 @@
+[build]
+builder = "NIXPACKS"
+
+[build.nixpacksPlan.phases.setup]
+nixPkgs = ["nodejs", "yarn"]
+
+[build.nixpacksPlan.phases.install]
+cmds = ["yarn install"]
+
+[build.nixpacksPlan.phases.build]
+cmds = ["yarn build"]
+
+[deploy]
+startCommand = "yarn predeploy && yarn start"
