@@ -48,7 +48,7 @@ export default defineConfig({
     workerMode: "shared"
   },
   admin: {
-    disable: process.env.DISABLE_ADMIN === "true" ? true : false,
+    disable: process.env.DISABLE_MEDUSA_ADMIN === "true" ? true : false,
   },
   modules: [
     {
