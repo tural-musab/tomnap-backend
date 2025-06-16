@@ -11,4 +11,4 @@ cmds = ["yarn install"]
 cmds = ["yarn build"]
 
 [deploy]
-startCommand = "yarn predeploy && yarn start"
+startCommand = "npx medusa db:migrate && npx medusa links sync && yarn start"
