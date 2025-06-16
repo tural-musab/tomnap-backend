@@ -8,7 +8,14 @@ nixPkgs = ["nodejs", "yarn"]
 cmds = ["yarn install"]
 
 [build.nixpacksPlan.phases.build]
-cmds = ["yarn build", "npx medusa db:migrate", "npx medusa links sync"]
+cmds = [
+  "yarn build", 
+  "npx medusa db:setup --skip-migrations",
+  "npx medusa db:migrate",
+  "npx medusa links sync"
+]
 
 [deploy]
 startCommand = "yarn start"
+healthcheckPath = "/health"
+healthcheckTimeout = 300

@@ -1,44 +1,75 @@
-import { loadEnv, defineConfig } from '@medusajs/framework/utils'
+import "dotenv/config"
+import { defineConfig } from "@medusajs/framework/utils"
 
-loadEnv(process.env.NODE_ENV || 'development', process.cwd())
+// Helper function to get environment variable with fallback
+const getEnvVar = (key: string, fallback?: string): string => {
+  const value = process.env[key] || fallback
+  if (!value) {
+    throw new Error(`Environment variable ${key} is required`)
+  }
+  return value
+}
+
+// Database URL parsing to handle Railway environment
+const getDatabaseUrl = (): string => {
+  const dbUrl = process.env.DATABASE_URL
+  if (!dbUrl) {
+    throw new Error("DATABASE_URL environment variable is required")
+  }
+  
+  // Log for debugging (remove in production)
+  console.log("DATABASE_URL:", dbUrl.replace(/:[^:@]*@/, ':***@'))
+  
+  return dbUrl
+}
+
+// Redis URL parsing to handle Railway environment  
+const getRedisUrl = (): string => {
+  const redisUrl = process.env.REDIS_URL
+  if (!redisUrl) {
+    throw new Error("REDIS_URL environment variable is required")
+  }
+  
+  // Log for debugging (remove in production)
+  console.log("REDIS_URL:", redisUrl.replace(/:[^:@]*@/, ':***@'))
+  
+  return redisUrl
+}
 
 export default defineConfig({
   projectConfig: {
-    databaseUrl: process.env.DATABASE_URL,
+    databaseUrl: getDatabaseUrl(),
     http: {
       storeCors: process.env.STORE_CORS || "http://localhost:8000",
       adminCors: process.env.ADMIN_CORS || "http://localhost:7001",
-      authCors: process.env.AUTH_CORS || "http://localhost:8000,http://localhost:7001",
-      jwtSecret: process.env.JWT_SECRET || "supersecret",
-      cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+      authCors: process.env.STORE_CORS || "http://localhost:8000"
     },
-    // ❌ workerMode'u kaldırıyoruz - TypeScript hatası veriyor
-    redisUrl: process.env.REDIS_URL,
+    redisUrl: getRedisUrl(),
+    workerMode: "shared"
   },
   admin: {
-    disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
+    disable: process.env.DISABLE_ADMIN === "true" ? true : false,
   },
-  // Redis modülleri conditional olarak
-  modules: process.env.REDIS_URL ? [
+  modules: [
     {
       resolve: "@medusajs/medusa/cache-redis",
       options: { 
-        redisUrl: process.env.REDIS_URL,
+        redisUrl: getRedisUrl(),
       },
     },
     {
-      resolve: "@medusajs/medusa/event-bus-redis",
+      resolve: "@medusajs/medusa/event-bus-redis", 
       options: { 
-        redisUrl: process.env.REDIS_URL,
+        redisUrl: getRedisUrl(),
       },
     },
     {
-      resolve: "@medusajs/medusa/workflow-engine-redis", 
+      resolve: "@medusajs/medusa/workflow-engine-redis",
       options: { 
         redis: { 
-          url: process.env.REDIS_URL,
+          url: getRedisUrl(),
         },
       },
     },
-  ] : []
+  ]
 })
