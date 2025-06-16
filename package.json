@@ -15,7 +15,7 @@
   "scripts": {
     "build": "medusa build",
     "seed": "medusa exec ./src/scripts/seed.ts",
-    "start": "medusa start",
+    "start": "medusa db:migrate && medusa links sync && medusa start",
     "dev": "medusa develop",
     "predeploy": "medusa db:migrate && medusa links sync",
     "deploy": "medusa start",

@@ -12,10 +12,8 @@ cmds = [
   "yarn build"
 ]
 
-[build.nixpacksPlan.phases.start]
-cmd = "yarn predeploy && yarn start"
-
 [deploy]
+startCommand = "yarn start"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
