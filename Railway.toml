@@ -10,8 +10,7 @@ cmds = ["yarn install --frozen-lockfile"]
 [build.nixpacksPlan.phases.build]
 cmds = [
   "yarn build",
-  "npx medusa db:create --if-not-exists || true",
-  "npx medusa db:migrate --run-migrations",
+  "npx medusa db:migrate",
   "npx medusa links sync"
 ]
 
