@@ -3,6 +3,10 @@ import { ProductStatus } from "@medusajs/framework/utils"
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   try {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+    
     const query = req.scope.resolve("query")
     
     const { data: products } = await query.graph({
@@ -16,7 +20,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
         "sales_channels.*"
       ],
       filters: {
-        status: ProductStatus.PUBLISHED
+        status: ["published"] as any
       }
     })
     
@@ -31,4 +35,11 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       message: error.message 
     })
   }
+}
+
+export const OPTIONS = async (req: MedusaRequest, res: MedusaResponse) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+  res.status(200).end()
 } 
