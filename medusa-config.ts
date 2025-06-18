@@ -50,6 +50,10 @@ export default defineConfig({
   admin: {
     disable: process.env.DISABLE_MEDUSA_ADMIN === "true" ? true : false,
   },
+    // Feature flags ekleyin
+    featureFlags: {
+      publishable_api_keys: false  // Publishable key kontrolünü kapat
+    },
   modules: [
     {
       resolve: "@medusajs/medusa/cache-redis",
